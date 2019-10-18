@@ -3,32 +3,34 @@ import axios from "axios";
 import CharacterCard from "./CharacterCard";
 import styled from "styled-components";
 import SearchForm from "./SearchForm";
+import PageButton from "./PageButton";
 
 export default function CharacterList() {
   // TODO: Add useState to track data from useEffect
   const [characters, setCharacters] = useState([]);
   const [query, setQuery] = useState("");
   const [filteredCharacters, setFilteredCharacters] = useState([]);
+  const [page, setPage] = useState(1);
   useEffect(() => {
     // TODO: Add API Request here - must run in `useEffect`
     //  Important: verify the 2nd `useEffect` parameter: the dependancies array!
-    axios.get("https://rickandmortyapi.com/api/character/")
+    axios.get(`https://rickandmortyapi.com/api/character/?page=${page}`)
       .then(response => {
         setCharacters(response.data.results);
         setFilteredCharacters(response.data.results)
-        console.log(response.data.results);
+        setPage(response.data.results)
       })
       .catch(error => {
 				console.log(error);
 			});
-  }, []);
+  }, [page]);
   useEffect(() => {
     setFilteredCharacters(
       characters.filter(element =>
         element.name.toLowerCase().includes(query.toLowerCase())
       )
     )
-  }, [characters, query])
+  }, [characters, query, page])
   const handleInputChange = event => {
     setQuery(event.target.value);
   }
@@ -40,6 +42,7 @@ export default function CharacterList() {
   `;
   return (
     <section className="character-list">
+      <PageButton setPage={setPage} page={page}/>
       <>
       <SearchForm query={query} handleInputChange={handleInputChange}/>
       <CharacterPage>
