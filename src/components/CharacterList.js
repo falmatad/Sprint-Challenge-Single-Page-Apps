@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import CharacterCard from "./CharacterCard";
 import styled from "styled-components";
+import SearchForm from "./SearchForm";
 
 export default function CharacterList() {
   // TODO: Add useState to track data from useEffect
@@ -39,23 +40,14 @@ export default function CharacterList() {
   `;
   return (
     <section className="character-list">
-      <form className="search">
-        <input
-          type="text"
-          onChange={handleInputChange}
-          value={query}
-          name="name"
-          tabIndex="0"
-          className="prompt search-name"
-          placeholder="search by name"
-          autoComplete="off"
-        />
-      </form>
+      <>
+      <SearchForm query={query} handleInputChange={handleInputChange}/>
       <CharacterPage>
 			{filteredCharacters.map((character, index) => {
 				return <CharacterCard key={index} character={character} />
       })}
       </CharacterPage>
+      </>
 		</section>
   );
 }
